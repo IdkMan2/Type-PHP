@@ -5,10 +5,9 @@
   use App\Bootstrap\Events\AppShutdownEvent;
   use App\Bootstrap\MySQL\MySqlDB;
   use App\Bootstrap\Providers\Log;
-  use App\Bootstrap\Traits\ApplicationBase;
-  use App\Bootstrap\Traits\BuiltInAnnotations;
-  use App\Bootstrap\Traits\IocContainer;
-  use App\Bootstrap\Traits\EventsManager;
+  use App\Bootstrap\AppExtensions\ApplicationBase;
+  use App\Bootstrap\AppExtensions\IocContainer;
+  use App\Bootstrap\AppExtensions\EventsManager;
   use App\Bootstrap\Utils\Env;
   use App\Bootstrap\Utils\Path;
   use Exception;
@@ -17,7 +16,7 @@
   use Tracy\Debugger;
 
   class Application {
-    use ApplicationBase, IocContainer, EventsManager, BuiltInAnnotations;
+    use ApplicationBase, IocContainer, EventsManager;
     
     const DIRECTORY = __DIR__;
   
@@ -27,12 +26,16 @@
      */
     public function __construct() {
       $this->onEnable();
+      $this->onPostEnabled();
     }
   
     /**
      * @throws Exception
      */
     protected function onEnable() {
+      // define Application class itself as a provider
+      $this->addProviderByInstance($this);
+      
       // organize directories etc.
       $this->createCacheDirIfNotExists();
       
@@ -49,7 +52,7 @@
       Env::configure();
       $developmentMode = $_ENV['APP_ENV'] === 'development';
   
-      // enable debugging in dev mode
+      // enable debugging in dev mode OR error screen in production mode
       Debugger::$showBar = false;
       Debugger::$strictMode = true;
       Debugger::$scream = true;
@@ -63,28 +66,29 @@
       // setup logging
       $this->addProviderByClass(Log::class);
       
-      // define global errors handler
-      /*$errorsHandler = $this->addProvider(GlobalErrorsHandler::class);
-      $errorsHandler->setupHandlers();*/
-      
       // init mysql database
       $mysqlDb = $this->addProviderByClass(MySqlDB::class);
       $mysqlDb->open();
-      
+    }
+    
+    protected function onPostEnabled() {
       // emit app-enabled event
       $this->emitEvent(new AppEnabledEvent());
     }
-  
-    protected function onDisable() {
+    
+    protected function onBeforeShutdown() {
       // emit app-shutdown event
       $this->emitEvent(new AppShutdownEvent());
-      
+    }
+  
+    protected function onDisable() {
       // deinit mysql database
       if($this->isProviderDefined(MySqlDB::class))
         $this->getProvider(MySqlDB::class)->close();
     }
   
     function __destruct() {
+      $this->onBeforeShutdown();
       $this->onDisable();
     }
     

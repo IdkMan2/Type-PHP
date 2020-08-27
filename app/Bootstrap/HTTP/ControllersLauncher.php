@@ -1,6 +1,7 @@
 <?php
   namespace App\Bootstrap\HTTP;
 
+  use App\Application;
   use App\Bootstrap\HTTP\Exceptions\BadRequestException;
   use App\Bootstrap\HTTP\Exceptions\ControllerLaunchException;
   use App\Bootstrap\HTTP\Exceptions\NotFoundException;
@@ -9,20 +10,21 @@
   class ControllersLauncher {
   
     /**
+     * @param Application $app
      * @param Request $req
      * @param Response $res
      * @throws ControllerLaunchException
      * @noinspection PhpRedundantCatchClauseInspection
      */
-    public static function launch(Request $req, Response $res) {
+    public static function launch(Application $app, Request $req, Response $res): void {
       try {
-        $controllerClazz = self::findControllerClazz($req);
+        $controllerClass = self::findControllerClass($req);
         
-        if($controllerClazz === null) {
+        if($controllerClass === null) {
           throw new NotFoundException();
         }
         
-        $instance = new $controllerClazz();
+        $instance = $app->instantiateClass($controllerClass);
         
         if(!($instance instanceof Controller))
           throw new ControllerLaunchException("Controller class does not inherits from `App\Bootstrap\HTTP\Controller`.");
@@ -47,7 +49,7 @@
       }
     }
   
-    private static function findControllerClazz(Request $req) {
+    private static function findControllerClass(Request $req) {
       $dirUrl = $req->url->directoryUrl;
     
       if(isset(Route::$registry[$dirUrl])) {

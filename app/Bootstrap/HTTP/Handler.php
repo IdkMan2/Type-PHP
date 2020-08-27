@@ -2,6 +2,7 @@
   /** @noinspection PhpRedundantCatchClauseInspection */
   namespace App\Bootstrap\HTTP;
   
+  use App\Application;
   use App\Bootstrap\Utils\Path;
   use Exception;
   use App\Bootstrap\HTTP\Exceptions\BadRequestException;
@@ -9,8 +10,17 @@
   use RuntimeException;
 
   class Handler {
+    private Application $app;
   
-    public function proceed() {
+    /**
+     * Handler constructor.
+     * @param Application $app
+     */
+    public function __construct(Application $app) {
+      $this->app = $app;
+    }
+  
+    public function proceed(): void {
       $req = new Request();
       $res = new Response();
       
@@ -23,7 +33,7 @@
       }
       
       try {
-        ControllersLauncher::launch($req, $res);
+        ControllersLauncher::launch($this->app, $req, $res);
       } catch(NotFoundException $e) {
         $res->status(404);
         $res->plain($e->getMessage());

@@ -2,19 +2,22 @@
   namespace App;
   
   use App\Bootstrap\HTTP\Handler as HTTP;
-  use Exception;
 
   class Server extends Application {
-  
-    /**
-     * @throws Exception
-     */
-    public function onEnable() {
+    
+    protected function onEnable() {
       parent::onEnable();
+      
+      // add http provider
+      $this->addProviderByClass(HTTP::class);
+    }
   
-      // init http
-      /*$http = $this->addProvider(HTTP::class);
-      $http->proceed();*/
+    protected function onPostEnabled() {
+      parent::onPostEnabled();
+  
+      // init http request -> response process
+      $http = $this->getProvider(HTTP::class);
+      $http->proceed();
     }
   
   }

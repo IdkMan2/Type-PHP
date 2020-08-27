@@ -52,6 +52,21 @@
     public function accessReflection(): ReflectionClass {
       return $this->reflection;
     }
+    
+    public function hasConstructor(): bool {
+      return $this->accessReflection()->getConstructor() !== null;
+    }
+  
+    /**
+     * @return ReflectMethod
+     * @throws ReflectException
+     */
+    public function getConstructor(): ReflectMethod {
+      if($this->hasConstructor())
+        return new ReflectMethod($this, $this->accessReflection()->getConstructor()->getName());
+      else
+        throw new ReflectException(ReflectExceptionReason::CONSTRUCTOR_DOES_NOT_EXISTS());
+    }
   
     /**
      * @return array

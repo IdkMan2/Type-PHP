@@ -22,9 +22,9 @@
 
 ### TODO
 
-* Finish IoC container (dependency injection).
+* ~~Finish IoC container (dependency injection).~~
+* Write own debugger instead of Tracy & errors logging using existing logger.
 * Events listeners priority.
 * Events source - as listeners first argument (of object type).
 * Design middlewares (aka interceptors) for HTTP handler.
-* Write own debugger instead of Tracy & errors logging using existing logger.
 * Pack project under composer library.

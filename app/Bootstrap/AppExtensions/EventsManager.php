@@ -1,5 +1,5 @@
 <?php
-  namespace App\Bootstrap\Traits;
+  namespace App\Bootstrap\AppExtensions;
   
   use App\Bootstrap\Annotations\EventListenerAnnotation;
   use App\Bootstrap\Enums\ListenerRegisterExceptionReason;
