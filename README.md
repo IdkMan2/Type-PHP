@@ -11,8 +11,6 @@
 2. Run `composer install`
 2. Copy `.env.example` file and paste it under new name: `.env`. Next fill it accordingly.
 
-Gotowe
-
 ---
 
 ### Documentation build
@@ -21,3 +19,12 @@ Gotowe
 2. `npm run build-docs`
 
 ---
+
+### TODO
+
+* Finish IoC container (dependency injection).
+* Events listeners priority.
+* Events source - as listeners first argument (of object type).
+* Design middlewares (aka interceptors) for HTTP handler.
+* Write own debugger instead of Tracy & errors logging using existing logger.
+* Pack project under composer library.

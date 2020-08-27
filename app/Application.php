@@ -48,9 +48,11 @@
   
       // enable debugging in dev mode
       Debugger::$showBar = false;
+      Debugger::$strictMode = true;
+      Debugger::$scream = true;
       if($_ENV['APP_ENV'] === 'development') {
         Debugger::enable(
-            $developmentMode ? Debugger::DEVELOPMENT : Debugger::PRODUCTION,
+            !$developmentMode ? Debugger::DEVELOPMENT : Debugger::PRODUCTION,
             Path::resolve('/storage/logs/exceptions')
         );
       }
