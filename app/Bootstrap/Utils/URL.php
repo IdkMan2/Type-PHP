@@ -1,19 +1,21 @@
 <?php
+  declare(strict_types=1);
   namespace App\Bootstrap\Utils;
-  
-  use Exception;
 
   class URL {
-    public string $host, $originalUrl, $directoryUrl, $query;
-    public array $levels = [], $allowedCompressionTypes = [];
+    public string $url, $host, $directoryUrl, $query;
+    public array $levels = [], $allowedCompressionTypes = [], $variables = [];
     public bool $allowedCompression = false;
   
     /**
      * RequestHandler constructor.
-     * @throws Exception
+     * @param string $url
+     * @param string $host
      */
-    public function __construct() {
-      $this->host = $_SERVER['HTTP_HOST'];
+    public function __construct(string $url, string $host) {
+      $this->url = $url;
+      $this->host = $host;
+      
       $this->prepareUrl();
       $this->prepareLevels();
       $this->checkAllowedCompression();
@@ -21,18 +23,13 @@
   
     /**
      * @internal
-     * @throws Exception
      */
-    private function prepareUrl() {
-      $this->originalUrl = $_SERVER["REQUEST_URI"];
+    private function prepareUrl(): void {
       // Utnij wszystkie tagi HTML'a
-      $dirUrl = strip_tags($this->originalUrl);
+      $dirUrl = strip_tags($this->url);
       // Usuń wszystkie znaki specjalne HTML'a, tj. &amp;
       $dirUrl = html_entity_decode($dirUrl);
-      /*
-       * Encoduj znaki specjalne - nie używane
-       * $this->formattedUrl = urldecode($formattedUrl);
-       */
+      // Wydziel część directory od query
       $urlParts = explode("?", $dirUrl);
       $this->directoryUrl = $urlParts[0];
       /*
@@ -43,19 +40,26 @@
       $this->query = sizeof($urlParts) > 1 ? $urlParts[1] : "";
     }
   
-    private function prepareLevels() {
+    private function prepareLevels(): void {
       $stringParts = explode("/", $this->directoryUrl);
       foreach($stringParts as $stringPart) {
-        if($stringPart==="")
+        if(strlen($stringPart) === 0)
           continue;
-        array_push($this->levels, mb_strtolower($stringPart, 'UTF-8'));
-      }
-      if(sizeof($this->levels) === 0) {
-        array_push($this->levels, "index");
+        
+        if($stringPart[0] === ':')
+          array_push(
+              $this->variables,
+              strtolower(substr($stringPart, 1))
+          );
+        
+        array_push(
+            $this->levels,
+            strtolower($stringPart)
+        );
       }
     }
   
-    private function checkAllowedCompression() {
+    private function checkAllowedCompression(): void {
       if(isset($_SERVER["HTTP_ACCEPT_ENCODING"])) {
         $this->allowedCompression = true;
         $this->allowedCompressionTypes = explode(",", $_SERVER["HTTP_ACCEPT_ENCODING"]);

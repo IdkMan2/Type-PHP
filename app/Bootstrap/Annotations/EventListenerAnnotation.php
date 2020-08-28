@@ -1,4 +1,5 @@
 <?php
+  declare(strict_types=1);
   namespace App\Bootstrap\Annotations;
   
   use App\Bootstrap\Enums\EventListenerPriority;

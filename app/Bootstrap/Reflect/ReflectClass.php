@@ -1,5 +1,6 @@
 <?php
   /** @noinspection PhpRedundantCatchClauseInspection */
+  declare(strict_types=1);
   namespace App\Bootstrap\Reflect;
   
   use App\Bootstrap\Enums\ReflectExceptionReason;

@@ -1,4 +1,5 @@
 <?php
+  declare(strict_types=1);
   namespace App\Bootstrap\HTTP;
   
   use App\Bootstrap\Utils\URL;
@@ -16,8 +17,8 @@
       $this->files = $_FILES;
       
       $this->method = mb_strtoupper($_SERVER["REQUEST_METHOD"], 'UTF-8');
-      
-      $this->url = new URL();
+  
+      $this->url = new URL($_SERVER['REQUEST_URI'], $_SERVER['HTTP_HOST']);
     }
   
     /**

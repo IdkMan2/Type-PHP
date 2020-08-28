@@ -1,4 +1,5 @@
 <?php
+  declare(strict_types=1);
   namespace App\Bootstrap\Providers;
 
   use App\Bootstrap\Utils\ClassHelpers;

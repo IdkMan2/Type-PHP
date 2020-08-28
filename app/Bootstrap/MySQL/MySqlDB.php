@@ -1,4 +1,5 @@
 <?php
+  declare(strict_types=1);
   namespace App\Bootstrap\MySQL;
   
   use mysqli;
@@ -143,7 +144,7 @@
           $this->dbCredentials['MYSQL_USER'],
           $this->dbCredentials['MYSQL_PASSWORD'],
           $this->dbCredentials['MYSQL_DB_NAME'],
-          $this->dbCredentials['MYSQL_PORT']
+          (int) $this->dbCredentials['MYSQL_PORT']
       );
       // Check connection
       if ($conn->connect_error) {

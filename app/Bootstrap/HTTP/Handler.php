@@ -1,5 +1,6 @@
 <?php
   /** @noinspection PhpRedundantCatchClauseInspection */
+  declare(strict_types=1);
   namespace App\Bootstrap\HTTP;
   
   use App\Application;
@@ -26,7 +27,7 @@
       
       include Path::resolve('/app/Http/web.php');
   
-      if($req->url->levels[0] === 'api') {
+      if(sizeof($req->url->levels) > 0 && $req->url->levels[0] === 'api') {
         header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
         header("Access-Control-Allow-Origin: *");
         header("Accept: application/json");
