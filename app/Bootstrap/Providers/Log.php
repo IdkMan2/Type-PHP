@@ -1,6 +1,7 @@
 <?php
   namespace App\Bootstrap\Providers;
 
+  use App\Bootstrap\Utils\ClassHelpers;
   use App\Bootstrap\Utils\Path;
   use Exception;
   use Monolog\Logger as MonologLogger;
@@ -29,8 +30,15 @@
     public static function error(string $message, array $context = []) {
       self::$logger->error($message, $context);
     }
-    public static function captureException(Exception $e) {
-      GlobalErrorsHandler::$errorsHandler->handleException($e);
+    public static function captureException(Exception $e, array $context = []) {
+      self::$logger->error(
+          sprintf(
+              'Logged exception %s: "%s" at %s line %s',
+              ClassHelpers::getNameFromObject($e),
+              $e->getMessage(), $e->getFile(), $e->getLine()
+          ),
+          array_merge(['exception' => $e], $context)
+      );
     }
   
   }

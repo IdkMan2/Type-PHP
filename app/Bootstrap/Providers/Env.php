@@ -1,6 +1,7 @@
 <?php
-  namespace App\Bootstrap\Utils;
+  namespace App\Bootstrap\Providers;
   
+  use App\Bootstrap\Utils\Path;
   use Dotenv\Dotenv;
 
   class Env {
@@ -8,7 +9,8 @@
     public static function configure() {
       $dotenv = Dotenv::createImmutable(Path::resolve('/'));
       $dotenv->load();
-      $dotenv->required(['MYSQL_HOST', 'MYSQL_USER', 'MYSQL_PASSWORD', 'MYSQL_DB_NAME']);
+      $dotenv->required(['APP_ENV']);
+      return $dotenv;
     }
   
   }

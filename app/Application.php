@@ -8,7 +8,7 @@
   use App\Bootstrap\AppExtensions\ApplicationBase;
   use App\Bootstrap\AppExtensions\IocContainer;
   use App\Bootstrap\AppExtensions\EventsManager;
-  use App\Bootstrap\Utils\Env;
+  use App\Bootstrap\Providers\Env;
   use App\Bootstrap\Utils\Path;
   use Exception;
   use mindplay\annotations\AnnotationCache;
@@ -49,7 +49,7 @@
       $this->registerBuiltInAnnotations();
       
       // configure environment variables
-      Env::configure();
+      $this->addProviderByInstance(Env::configure());
       $developmentMode = $_ENV['APP_ENV'] === 'development';
   
       // enable debugging in dev mode OR error screen in production mode

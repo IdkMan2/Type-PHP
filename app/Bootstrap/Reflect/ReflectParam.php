@@ -49,12 +49,4 @@
     public function accessReflection(): Reflector {
       return $this->reflection;
     }
-  
-    public function getAnnotations(): array {
-      return [];
-    }
-  
-    public function getMetadata(string $annotation) {
-      return null;
-    }
   }

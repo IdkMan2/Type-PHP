@@ -9,15 +9,8 @@
    * @package Leona
    */
   class MySqlDB {
-    /**
-     * @var array $dbCredentials
-     */
-    private $dbCredentials;
-  
-    /**
-     * @var mysqli
-     */
-    private $conn = null;
+    private array $dbCredentials;
+    private ?mysqli $conn;
   
     /**
      * MySQLDB constructor.
@@ -36,7 +29,7 @@
      * Otwiera połączenie z bazą danych
      * @throws MySqlDbConnException
      */
-    public function open() {
+    public function open(): void {
       $this->conn = $this->getConnection();
     }
   
@@ -51,7 +44,7 @@
     /**
      * Zamyka połączenie z bazą danych
      */
-    public function close() {
+    public function close(): void {
       $this->conn->close();
       $this->conn = null;
     }
@@ -92,7 +85,7 @@
   
     /**
      * @param string $sql
-     * @return mixed
+     * @return array | bool
      * @throws MySqlQueryException
      */
     public function select(string $sql) {
@@ -102,7 +95,7 @@
     /**
      * @alias select(string $sql)
      * @param string $sql
-     * @return mixed
+     * @return array | bool
      * @throws MySqlQueryException
      */
     public function query(string $sql) {
@@ -111,7 +104,7 @@
   
     /**
      * @param string $sql
-     * @return mixed
+     * @return int | bool
      * @throws MySqlQueryException
      */
     public function insert(string $sql) {
@@ -123,16 +116,17 @@
      * @return mixed
      * @throws MySqlQueryException
      */
-    public function update(string $sql) {
+    public function update(string $sql): ?object {
       return $this->internal_query($sql, QueryParam::UPDATE);
     }
   
     /**
      * @param string $sql
+     * @return null
      * @throws MySqlQueryException
      */
-    public function delete(string $sql) {
-      $this->internal_query($sql, QueryParam::DELETE);
+    public function delete(string $sql): ?object {
+      return $this->internal_query($sql, QueryParam::DELETE);
     }
   
     /**
@@ -140,7 +134,7 @@
      * @throws MySqlDbConnException
      * @return mysqli
      */
-    private function getConnection() {
+    private function getConnection(): mysqli {
       if ($this->dbCredentials === null)
         throw new MySqlDbConnException("Credentials not provided.");
       // Create connection

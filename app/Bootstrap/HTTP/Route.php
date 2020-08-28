@@ -2,7 +2,7 @@
   namespace App\Bootstrap\HTTP;
 
   class Route {
-    static $registry = [];
+    static array $registry = [];
     
     public static function get(string $name, $controller) {
       if(!isset(Route::$registry[$name])) {

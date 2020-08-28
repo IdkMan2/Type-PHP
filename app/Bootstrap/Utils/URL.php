@@ -4,9 +4,9 @@
   use Exception;
 
   class URL {
-    public $host, $originalUrl, $directoryUrl, $query, $allowedCompressionTypes;
-    public $levels = [];
-    public $allowedCompression = false;
+    public string $host, $originalUrl, $directoryUrl, $query;
+    public array $levels = [], $allowedCompressionTypes = [];
+    public bool $allowedCompression = false;
   
     /**
      * RequestHandler constructor.

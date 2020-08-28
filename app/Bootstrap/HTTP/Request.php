@@ -5,7 +5,9 @@
   use App\Bootstrap\HTTP\Exceptions\BadRequestException;
 
   class Request {
-    public $input, $files, $method, $url;
+    public array $input, $files;
+    public string $method;
+    public URL $url;
     
     public function __construct() {
       $requestData = file_get_contents("php://input");
@@ -22,7 +24,7 @@
      * @param array $attributes
      * @throws BadRequestException
      */
-    public function required(array $attributes) {
+    public function required(array $attributes): void {
       foreach($attributes as $attributeName) {
         if(!isset($this->input[$attributeName])) {
           throw new BadRequestException("Brak pola `{$attributeName}`.");
