@@ -31,3 +31,4 @@
 * Design middlewares (aka interceptors) for HTTP handler.
 * Pack project under composer library.
 * OptionsAPI like in WordPress (with transients).
+* CLI like in Laravel
