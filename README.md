@@ -32,3 +32,4 @@
 * Pack project under composer library.
 * OptionsAPI like in WordPress (with transients).
 * CLI like in Laravel
+* Tasks handler (directly or via CRON)
