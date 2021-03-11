@@ -24,6 +24,8 @@
 
 * ~~Finish IoC container (dependency injection).~~
 * ~~Add strict-mode for whole app.~~
+* Upgrade PHP version
+* Use PHP 8 attributes instead of phpdocs
 * Better support for url variables and controllers.
 * Write own debugger instead of Tracy & errors logging using existing logger.
 * Events listeners priority.
